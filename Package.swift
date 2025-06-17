@@ -16,8 +16,7 @@ let package = Package(
             dependencies: [],
             path: "WakeyWakey",
             resources: [
-                .process("Assets.xcassets"),
-                .process("Info.plist")
+                .process("Assets.xcassets")
             ]
         ),
         .testTarget(
