@@ -104,14 +104,14 @@ jobs:
           
     - name: Package app for artifact
       run: |
-        cd ./export
-        zip -r WakeyWakey.zip WakeyWakey.app
+        # Create a disk image to preserve the .app bundle structure
+        hdiutil create -volname "WakeyWakey" -srcfolder ./export/WakeyWakey.app -ov -format UDZO ./export/WakeyWakey.dmg
         
     - name: Upload app artifact
       uses: actions/upload-artifact@v4
       with:
         name: WakeyWakey
-        path: ./export/WakeyWakey.zip
+        path: ./export/WakeyWakey.dmg
         
     - name: Upload DMG artifact
       if: startsWith(github.ref, 'refs/tags/v')
