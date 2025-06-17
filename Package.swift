@@ -14,7 +14,11 @@ let package = Package(
         .executableTarget(
             name: "WakeyWakey",
             dependencies: [],
-            path: "WakeyWakey"
+            path: "WakeyWakey",
+            resources: [
+                .process("Assets.xcassets"),
+                .process("Info.plist")
+            ]
         ),
         .testTarget(
             name: "WakeyWakeyTests",

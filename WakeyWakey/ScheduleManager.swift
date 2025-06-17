@@ -58,15 +58,27 @@ class ScheduleManager: ObservableObject {
     init(cafeinateManager: CafeinateManager) {
         self.cafeinateManager = cafeinateManager
         
-        // Initialize with default schedule (Mon-Fri, 9am-5pm)
+        // Initialize properties first
+        self.scheduleDays = []
+        self.isScheduleEnabled = UserDefaults.standard.bool(forKey: "isScheduleEnabled")
+        
+        // Helper function to create time without using self
+        func makeTime(hour: Int, minute: Int) -> Date {
+            var components = DateComponents()
+            components.hour = hour
+            components.minute = minute
+            return Calendar.current.date(from: components) ?? Date()
+        }
+        
+        // Create default schedule (Mon-Fri, 9am-5pm)
         let defaultSchedule = [
-            ScheduleDay(dayOfWeek: 1, isEnabled: true, startTime: createTime(hour: 9, minute: 0), endTime: createTime(hour: 17, minute: 0)),
-            ScheduleDay(dayOfWeek: 2, isEnabled: true, startTime: createTime(hour: 9, minute: 0), endTime: createTime(hour: 17, minute: 0)),
-            ScheduleDay(dayOfWeek: 3, isEnabled: true, startTime: createTime(hour: 9, minute: 0), endTime: createTime(hour: 17, minute: 0)),
-            ScheduleDay(dayOfWeek: 4, isEnabled: true, startTime: createTime(hour: 9, minute: 0), endTime: createTime(hour: 17, minute: 0)),
-            ScheduleDay(dayOfWeek: 5, isEnabled: true, startTime: createTime(hour: 9, minute: 0), endTime: createTime(hour: 17, minute: 0)),
-            ScheduleDay(dayOfWeek: 6, isEnabled: false, startTime: createTime(hour: 9, minute: 0), endTime: createTime(hour: 17, minute: 0)),
-            ScheduleDay(dayOfWeek: 0, isEnabled: false, startTime: createTime(hour: 9, minute: 0), endTime: createTime(hour: 17, minute: 0))
+            ScheduleDay(dayOfWeek: 1, isEnabled: true, startTime: makeTime(hour: 9, minute: 0), endTime: makeTime(hour: 17, minute: 0)),
+            ScheduleDay(dayOfWeek: 2, isEnabled: true, startTime: makeTime(hour: 9, minute: 0), endTime: makeTime(hour: 17, minute: 0)),
+            ScheduleDay(dayOfWeek: 3, isEnabled: true, startTime: makeTime(hour: 9, minute: 0), endTime: makeTime(hour: 17, minute: 0)),
+            ScheduleDay(dayOfWeek: 4, isEnabled: true, startTime: makeTime(hour: 9, minute: 0), endTime: makeTime(hour: 17, minute: 0)),
+            ScheduleDay(dayOfWeek: 5, isEnabled: true, startTime: makeTime(hour: 9, minute: 0), endTime: makeTime(hour: 17, minute: 0)),
+            ScheduleDay(dayOfWeek: 6, isEnabled: false, startTime: makeTime(hour: 9, minute: 0), endTime: makeTime(hour: 17, minute: 0)),
+            ScheduleDay(dayOfWeek: 0, isEnabled: false, startTime: makeTime(hour: 9, minute: 0), endTime: makeTime(hour: 17, minute: 0))
         ]
         
         // Load saved schedule or use default
@@ -75,9 +87,6 @@ class ScheduleManager: ObservableObject {
         } else {
             self.scheduleDays = defaultSchedule
         }
-        
-        // Load schedule enabled state
-        self.isScheduleEnabled = UserDefaults.standard.bool(forKey: "isScheduleEnabled")
         
         // Start the timer to check schedule status
         startTimer()
