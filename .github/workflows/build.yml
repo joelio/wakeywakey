@@ -21,15 +21,46 @@ jobs:
       with:
         xcode-version: latest-stable
         
-    - name: Create Xcode project
-      run: |
-        # Generate Xcode project from Package.swift
-        swift package generate-xcodeproj
-        
     - name: Build app
       run: |
-        cd WakeyWakey
-        xcodebuild -project WakeyWakey.xcodeproj -scheme WakeyWakey -configuration Release -archivePath ../WakeyWakey.xcarchive archive
+        # Build directly using Swift Package Manager
+        swift build -c release
+        
+        # Create a directory for the app bundle
+        mkdir -p ./build/WakeyWakey.app/Contents/MacOS
+        
+        # Copy the executable to the app bundle
+        cp .build/release/WakeyWakey ./build/WakeyWakey.app/Contents/MacOS/
+        
+        # Create a basic Info.plist
+        cat > ./build/WakeyWakey.app/Contents/Info.plist << EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>CFBundleExecutable</key>
+            <string>WakeyWakey</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.joelio.wakeywakey</string>
+            <key>CFBundleName</key>
+            <string>WakeyWakey</string>
+            <key>CFBundleVersion</key>
+            <string>1.0</string>
+            <key>LSUIElement</key>
+            <true/>
+        </dict>
+        </plist>
+        EOF
+        
+        # Create a directory for resources
+        mkdir -p ./build/WakeyWakey.app/Contents/Resources
+        
+        # Copy assets
+        cp -R WakeyWakey/Assets.xcassets ./build/WakeyWakey.app/Contents/Resources/
+        
+        # Create an archive
+        mkdir -p WakeyWakey.xcarchive/Products/Applications
+        cp -R ./build/WakeyWakey.app WakeyWakey.xcarchive/Products/Applications/
         
     - name: Create ExportOptions.plist
       if: startsWith(github.ref, 'refs/tags/v')
@@ -52,7 +83,9 @@ jobs:
     - name: Export app
       if: startsWith(github.ref, 'refs/tags/v')
       run: |
-        xcodebuild -exportArchive -archivePath ./WakeyWakey.xcarchive -exportPath ./export -exportOptionsPlist ExportOptions.plist
+        # Copy the app bundle to the export directory
+        mkdir -p ./export
+        cp -R ./build/WakeyWakey.app ./export/
         
     - name: Create DMG
       if: startsWith(github.ref, 'refs/tags/v')
