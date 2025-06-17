@@ -6,9 +6,10 @@ struct AboutView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Image(systemName: "sun.max.fill")
-                .font(.system(size: 48))
-                .foregroundColor(accentColor)
+            Image("MenuBarIconActive")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 64, height: 64)
             
             Text("Wakey Wakey")
                 .font(.title)

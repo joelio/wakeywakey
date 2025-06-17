@@ -2,8 +2,10 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var cafeinate: CafeinateManager
+    @ObservedObject var scheduleManager: ScheduleManager
     @AppStorage("launchAtStartup") private var launchAtStartup = false
     @State private var customDuration: String = ""
+    @State private var showingScheduleView = false
     
     private let accentColor = Color(red: 1.0, green: 0.7, blue: 0.0)
     private let presets: [(label: String, minutes: Int)] = [
@@ -128,6 +130,14 @@ struct ContentView: View {
                 .onChange(of: launchAtStartup) { newValue in
                     LaunchAtLogin.isEnabled = newValue
                 }
+                
+            Button("Schedule") {
+                showingScheduleView = true
+            }
+            .buttonStyle(.bordered)
+            .sheet(isPresented: $showingScheduleView) {
+                ScheduleView(scheduleManager: scheduleManager)
+            }
         }
     }
     
@@ -192,7 +202,9 @@ struct PresetButtonStyle: ButtonStyle {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(cafeinate: CafeinateManager())
-            .environmentObject(CafeinateManager())
+        let cafeinateManager = CafeinateManager()
+        let scheduleManager = ScheduleManager(cafeinateManager: cafeinateManager)
+        return ContentView(cafeinate: cafeinateManager, scheduleManager: scheduleManager)
+            .environmentObject(cafeinateManager)
     }
 }

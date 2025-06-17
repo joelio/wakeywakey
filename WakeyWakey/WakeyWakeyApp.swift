@@ -15,9 +15,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
     var popover: NSPopover?
     var cafeinate: CafeinateManager?
+    var scheduleManager: ScheduleManager?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         cafeinate = CafeinateManager()
+        scheduleManager = ScheduleManager(cafeinateManager: cafeinate!)
         
         setupMenuBar()
         setupPopover()
@@ -27,7 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
         if let button = statusItem?.button {
-            button.image = NSImage(systemSymbolName: "moon.zzz", accessibilityDescription: "Wakey Wakey")
+            button.image = NSImage(named: "MenuBarIcon")
             button.action = #selector(togglePopover)
             button.target = self
         }
@@ -38,7 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.contentSize = NSSize(width: 280, height: 380)
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(
-            rootView: ContentView(cafeinate: cafeinate!)
+            rootView: ContentView(cafeinate: cafeinate!, scheduleManager: scheduleManager!)
                 .environmentObject(cafeinate!)
         )
         self.popover = popover
@@ -57,8 +59,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func updateMenuBarIcon(isActive: Bool) {
         if let button = statusItem?.button {
-            let symbolName = isActive ? "sun.max.fill" : "moon.zzz"
-            button.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Wakey Wakey")
+            if isActive {
+                button.image = NSImage(named: "MenuBarIconActive")
+            } else {
+                button.image = NSImage(named: "MenuBarIcon")
+            }
         }
     }
 }

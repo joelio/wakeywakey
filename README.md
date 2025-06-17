@@ -28,7 +28,7 @@ A native macOS menu bar app that prevents your Mac from sleeping.
 ### Option 2: Homebrew
 
 ```bash
-brew install yourusername/wakey-wakey/wakey-wakey
+brew install yourusername/wakeywakey/wakeywakey
 ```
 
 ## Usage
@@ -53,7 +53,7 @@ The menu bar icon will change to indicate the active state.
 1. Clone the repository:
    ```bash
    git clone https://github.com/joelio/wakeywakey.git
-   cd wakey-wakey
+   cd wakeywakey
    ```
 
 2. Open the project in Xcode:

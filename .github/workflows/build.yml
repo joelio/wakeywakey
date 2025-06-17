@@ -21,9 +21,15 @@ jobs:
       with:
         xcode-version: latest-stable
         
+    - name: Create Xcode project
+      run: |
+        # Generate Xcode project from Package.swift
+        swift package generate-xcodeproj
+        
     - name: Build app
       run: |
-        xcodebuild -project WakeyWakey.xcodeproj -scheme WakeyWakey -configuration Release -archivePath ./WakeyWakey.xcarchive archive
+        cd WakeyWakey
+        xcodebuild -project WakeyWakey.xcodeproj -scheme WakeyWakey -configuration Release -archivePath ../WakeyWakey.xcarchive archive
         
     - name: Create ExportOptions.plist
       if: startsWith(github.ref, 'refs/tags/v')
@@ -54,8 +60,7 @@ jobs:
         brew install create-dmg
         create-dmg \
           --volname "Wakey Wakey" \
-          --volicon "WakeyWakey/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png" \
-          --background "DMG-background.png" \
+          --volicon "WakeyWakey/Assets.xcassets/AppIcon.appiconset/wakey-wakey-icon.png" \
           --window-pos 200 120 \
           --window-size 800 400 \
           --icon-size 100 \
