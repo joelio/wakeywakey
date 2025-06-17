@@ -40,7 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.contentSize = NSSize(width: 280, height: 380)
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(
-            rootView: ContentView(cafeinate: cafeinate!, scheduleManager: scheduleManager!)
+            rootView: ContentView(scheduleManager: scheduleManager!)
                 .environmentObject(cafeinate!)
         )
         self.popover = popover

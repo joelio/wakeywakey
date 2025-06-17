@@ -75,7 +75,7 @@ struct ContentView: View {
                     }
                     .buttonStyle(PresetButtonStyle(isSelected: cafeinate.isActive && cafeinate.currentDuration == preset.minutes, accentColor: accentColor))
                     
-                    if preset != presets.last {
+                    if let last = presets.last, preset != last {
                         Spacer()
                     }
                 }
@@ -91,7 +91,6 @@ struct ContentView: View {
             HStack {
                 TextField("Minutes", text: $customDuration)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .keyboardType(.numberPad)
                 
                 Button("Start") {
                     if let minutes = Int(customDuration), minutes > 0 {
@@ -204,7 +203,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let cafeinateManager = CafeinateManager()
         let scheduleManager = ScheduleManager(cafeinateManager: cafeinateManager)
-        return ContentView(cafeinate: cafeinateManager, scheduleManager: scheduleManager)
+        return ContentView(scheduleManager: scheduleManager)
             .environmentObject(cafeinateManager)
     }
 }

@@ -26,35 +26,35 @@ struct LaunchAtLogin {
                     print("Failed to \(newValue ? "register" : "unregister") app for launch at login: \(error.localizedDescription)")
                 }
             } else {
-                // For older macOS versions
+                // For older macOS versions (10.11+)
                 UserDefaults.standard.set(newValue, forKey: "launchAtStartup")
                 
-                let bundleId = Bundle.main.bundleIdentifier ?? ""
-                if let loginItems = LSSharedFileListCreate(nil, kLSSharedFileListSessionLoginItems.takeRetainedValue(), nil)?.takeRetainedValue() {
-                    if newValue {
-                        // Add to login items
-                        if let appURL = Bundle.main.bundleURL as CFURL? {
-                            LSSharedFileListInsertItemURL(
-                                loginItems,
-                                kLSSharedFileListItemLast.takeRetainedValue(),
-                                nil,
-                                nil,
-                                appURL,
-                                nil,
-                                nil
-                            )
-                        }
-                    } else {
-                        // Remove from login items
-                        if let loginItemsArray = LSSharedFileListCopySnapshot(loginItems, nil)?.takeRetainedValue() as? [LSSharedFileListItem] {
-                            for loginItem in loginItemsArray {
-                                if let itemURL = LSSharedFileListItemCopyResolvedURL(loginItem, 0, nil)?.takeRetainedValue() as URL?,
-                                   itemURL.absoluteString == Bundle.main.bundleURL.absoluteString {
-                                    LSSharedFileListItemRemove(loginItems, loginItem)
-                                }
-                            }
-                        }
-                    }
+                // Use a simpler approach for older macOS versions
+                // that doesn't rely on deprecated APIs
+                let appURL = Bundle.main.bundleURL
+                
+                // Use AppleScript to manage login items
+                let task = Process()
+                task.launchPath = "/usr/bin/osascript"
+                
+                if newValue {
+                    // Add to login items
+                    task.arguments = [
+                        "-e",
+                        "tell application \"System Events\" to make login item at end with properties {path:\"\(appURL.path)\", hidden:false}"
+                    ]
+                } else {
+                    // Remove from login items
+                    task.arguments = [
+                        "-e",
+                        "tell application \"System Events\" to delete login item \"\(Bundle.main.bundleIdentifier ?? "")\" if it exists"
+                    ]
+                }
+                
+                do {
+                    try task.run()
+                } catch {
+                    print("Failed to manage login items: \(error)")
                 }
             }
         }

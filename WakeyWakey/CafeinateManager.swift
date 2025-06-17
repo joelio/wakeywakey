@@ -6,6 +6,7 @@ class CafeinateManager: ObservableObject {
     @Published var currentDuration: Int = 0
     @Published var remainingTime: Int = 0
     @Published var endTime: Date? = nil
+    @Published var activatedBySchedule: Bool = false
     
     @AppStorage("preventDisplaySleep") var preventDisplaySleep: Bool = true
     @AppStorage("preventDiskSleep") var preventDiskSleep: Bool = false
