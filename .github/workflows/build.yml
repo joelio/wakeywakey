@@ -66,14 +66,14 @@ jobs:
           "./export/WakeyWakey.app"
           
     - name: Upload app artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: WakeyWakey.app
         path: ./export/WakeyWakey.app
         
     - name: Upload DMG artifact
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: WakeyWakey.dmg
         path: ./WakeyWakey.dmg
