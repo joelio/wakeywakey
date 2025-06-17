@@ -1,8 +1,9 @@
 # Wakey Wakey
 
-A native macOS menu bar app that prevents your Mac from sleeping.
+A native macOS menu bar app that prevents your Mac from sleeping using the `caffeinate` command.
 
-![Wakey Wakey App](screenshots/app-preview.png)
+<!-- Add a screenshot once available -->
+<!-- ![Wakey Wakey App](screenshots/app-preview.png) -->
 
 ## Features
 
@@ -28,25 +29,25 @@ A native macOS menu bar app that prevents your Mac from sleeping.
 ### Option 2: Homebrew
 
 ```bash
-brew install yourusername/wakeywakey/wakeywakey
+brew install joelio/wakey-wakey/wakey-wakey
 ```
 
 ## Usage
 
 1. Click the menu bar icon (moon icon when inactive, sun icon when active)
 2. Select a preset duration or enter a custom duration
-3. Configure which sleep modes to prevent
+3. Configure which sleep modes to prevent (display, disk, or system sleep)
 4. Click "Start" to activate
+5. Optionally, set up a schedule to automatically activate during work hours
 
-The menu bar icon will change to indicate the active state.
+The menu bar icon will change to indicate the active state, and you'll see a countdown timer showing the remaining time until your Mac can sleep again.
 
 ## Building from Source
 
 ### Requirements
 
 - macOS 11.0+
-- Xcode 13.0+
-- Swift 5.5+
+- Xcode 13.0+ or Swift 5.5+
 
 ### Steps
 
@@ -56,16 +57,29 @@ The menu bar icon will change to indicate the active state.
    cd wakeywakey
    ```
 
-2. Open the project in Xcode:
+2. Build using Swift Package Manager:
    ```bash
-   open WakeyWakey.xcodeproj
+   swift build
    ```
 
-3. Build and run the app (⌘+R)
+3. Or open and build with Xcode:
+   ```bash
+   xed .
+   ```
+   Then build and run the app (⌘+R)
 
 ## How It Works
 
 Wakey Wakey uses macOS's native `caffeinate` command-line utility to prevent sleep. This is the same utility that the built-in "caffeinate" command uses, but with a friendly GUI and additional features.
+
+### Key Features
+
+- **Menu Bar Integration**: Always accessible but never in the way
+- **Scheduling**: Set up automatic activation during work hours
+- **Fine-grained Control**: Choose which types of sleep to prevent
+- **Presets**: Quick access to common durations
+- **Custom Duration**: Set any time in minutes
+- **Launch at Login**: Automatically start with your Mac
 
 ## License
 
@@ -79,3 +93,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
