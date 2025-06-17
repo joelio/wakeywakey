@@ -102,11 +102,16 @@ jobs:
           "WakeyWakey.dmg" \
           "./export/WakeyWakey.app"
           
+    - name: Package app for artifact
+      run: |
+        cd ./export
+        zip -r WakeyWakey.zip WakeyWakey.app
+        
     - name: Upload app artifact
       uses: actions/upload-artifact@v4
       with:
-        name: WakeyWakey.app
-        path: ./export/WakeyWakey.app
+        name: WakeyWakey
+        path: ./export/WakeyWakey.zip
         
     - name: Upload DMG artifact
       if: startsWith(github.ref, 'refs/tags/v')
