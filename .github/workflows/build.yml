@@ -81,7 +81,6 @@ jobs:
         EOF
         
     - name: Export app
-      if: startsWith(github.ref, 'refs/tags/v')
       run: |
         # Copy the app bundle to the export directory
         mkdir -p ./export
